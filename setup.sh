@@ -1,20 +1,19 @@
 #!/bin/bash
-# Quick setup script for scheduling research project
-# Run: bash setup.sh
-
 set -e
 
-echo "=== Setting up Scheduling Research Environment ==="
+echo "=== Scheduling Research Setup ==="
 
-# Check if conda is available
+# Check conda
 if ! command -v conda &> /dev/null; then
-    echo "Error: conda not found. Please install Miniconda or Anaconda first."
+    echo "Error: conda not found. Install Miniconda first."
     exit 1
 fi
 
-# Create conda environment
+# Create environment
 echo "Creating conda environment..."
 conda create -n scheduling-research python=3.11 -y
+
+# Activate
 eval "$(conda shell.bash hook)"
 conda activate scheduling-research
 
@@ -23,7 +22,7 @@ echo "Installing Graphviz..."
 conda install -c conda-forge graphviz python-graphviz -y
 
 # Clone SAGA
-echo "Cloning SAGA framework..."
+echo "Cloning SAGA..."
 if [ ! -d "saga" ]; then
     git clone https://github.com/ANRGUSC/saga.git
 fi
@@ -34,18 +33,12 @@ cd saga
 pip install -e .
 cd ..
 
-# Install additional requirements
-echo "Installing additional dependencies..."
+# Install requirements
+echo "Installing dependencies..."
 pip install -r requirements.txt
 
 echo ""
-echo "=== Setup Complete! ==="
+echo "=== Setup Complete ==="
 echo ""
-echo "To activate the environment:"
-echo "  conda activate scheduling-research"
-echo ""
-echo "To run SAGA tests:"
-echo "  pytest saga/tests -k 'HeftScheduler' --timeout=60"
-echo ""
-echo "To start Jupyter:"
-echo "  jupyter lab"
+echo "Activate with: conda activate scheduling-research"
+echo "Test with: python scripts/explore_saga.py"

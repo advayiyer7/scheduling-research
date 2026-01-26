@@ -1,63 +1,72 @@
 """
 Custom Scheduling Algorithms
 
-This module contains new scheduler implementations for the research project.
-All schedulers should be compatible with the SAGA framework.
-
-To create a new scheduler:
-1. Inherit from saga.schedulers.Scheduler base class
-2. Implement the schedule() method
-3. Run tests: pytest tests/test_schedulers.py -k "YourScheduler"
+Usage:
+    from src.schedulers import RandomScheduler, GreedyLoadBalancer
 """
 
-from typing import Optional
-# from saga.schedulers import Scheduler
-# from saga.data import TaskGraph, Network, Schedule
+import random
+import networkx as nx
+from typing import Dict, Any, Optional
+
+# Check if SAGA is available
+try:
+    from saga.schedulers import Scheduler
+    SAGA_AVAILABLE = True
+except ImportError:
+    SAGA_AVAILABLE = False
+    Scheduler = object
 
 
-class CustomScheduler:
-    """
-    Template for a custom scheduler.
+class RandomScheduler:
+    """Baseline: Random task-to-processor assignment."""
     
-    TODO: Replace with actual implementation inheriting from SAGA's Scheduler.
-    """
+    def __init__(self, seed: Optional[int] = None):
+        self.seed = seed
     
-    def __init__(self, **kwargs):
-        """Initialize scheduler with optional parameters."""
-        self.params = kwargs
-    
-    def schedule(self, network, task_graph):
-        """
-        Generate a schedule for the given task graph on the network.
+    def schedule(self, network, task_graph) -> Dict[Any, Any]:
+        if self.seed is not None:
+            random.seed(self.seed)
         
-        Args:
-            network: Network object defining compute resources
-            task_graph: TaskGraph object defining the workflow DAG
+        processors = list(network.nodes())
+        topo_order = list(nx.topological_sort(task_graph))
+        
+        assignments = {}
+        for task in topo_order:
+            assignments[task] = random.choice(processors)
+        
+        return assignments
+
+
+class GreedyLoadBalancer:
+    """Assign each task to least-loaded processor."""
+    
+    def schedule(self, network, task_graph) -> Dict[Any, Any]:
+        processors = list(network.nodes())
+        topo_order = list(nx.topological_sort(task_graph))
+        
+        processor_load = {p: 0.0 for p in processors}
+        assignments = {}
+        
+        for task in topo_order:
+            # Get task cost
+            cost = task_graph.nodes[task].get('cost', 1.0)
+            if isinstance(cost, dict):
+                cost = sum(cost.values()) / len(cost) if cost else 1.0
             
-        Returns:
-            Schedule object with task-to-processor assignments and timing
-        """
-        raise NotImplementedError("Implement your scheduling algorithm here")
+            # Assign to least loaded
+            min_proc = min(processors, key=lambda p: processor_load[p])
+            assignments[task] = min_proc
+            processor_load[min_proc] += float(cost)
+        
+        return assignments
 
 
-class GNNScheduler:
-    """
-    Graph Neural Network based scheduler.
+class MyCustomScheduler:
+    """TODO: Implement your own scheduler."""
     
-    Uses a GNN to predict optimal task-processor assignments based on
-    learned representations of task graphs and network topologies.
-    
-    TODO: Implement after understanding SAGA framework and GCN paper.
-    """
-    
-    def __init__(self, model_path: Optional[str] = None):
-        self.model_path = model_path
-        self.model = None
-    
-    def load_model(self, path: str):
-        """Load a trained GNN model."""
-        raise NotImplementedError
+    def __init__(self, **params):
+        self.params = params
     
     def schedule(self, network, task_graph):
-        """Use GNN to predict schedule."""
-        raise NotImplementedError
+        raise NotImplementedError("Implement your scheduler!")

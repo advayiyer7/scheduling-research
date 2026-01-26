@@ -1,57 +1,20 @@
-# Python
 __pycache__/
 *.py[cod]
-*$py.class
 *.so
-.Python
 build/
-develop-eggs/
 dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
 *.egg-info/
-.installed.cfg
-*.egg
-
-# Virtual environments
 venv/
-ENV/
 env/
 .conda/
-
-# Jupyter
 .ipynb_checkpoints/
-*.ipynb_checkpoints
-
-# IDE
 .idea/
 .vscode/
 *.swp
-*.swo
-*~
-
-# OS
 .DS_Store
-Thumbs.db
-
-# Project specific
-data/raw/
-experiments/outputs/
-*.log
-*.csv
-!data/examples/*.csv
-
-# PyTorch
 *.pt
 *.pth
 checkpoints/
-
-# Ignore SAGA if cloned as subdirectory (use submodule instead)
-# saga/
+*.log
+wandb/
+saga/
