@@ -66,6 +66,7 @@
 
 ---
 
+
 ## Experiment Ideas
 
 1. **Communication ratio impact**: How does CCR (communication-to-computation ratio) affect scheduler performance?

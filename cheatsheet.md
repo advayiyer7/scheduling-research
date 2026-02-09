@@ -24,10 +24,13 @@ pytest saga/tests -k "CpopScheduler" --timeout=60
 ```bash
 git add .
 git commit -m "message"
+
 git push
 ```
 
 ## Jupyter
 ```bash
+
 jupyter lab
-```
+`''
+
