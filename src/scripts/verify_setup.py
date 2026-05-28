@@ -32,7 +32,7 @@ def main():
     # Test 3: Import data classes
     print("[3] Importing data classes...", end=" ")
     try:
-        from saga.data import TaskGraph, Network
+        from saga import TaskGraph, Network, Schedule, ScheduledTask
         print("OK")
     except ImportError as e:
         print(f"FAILED: {e}")
